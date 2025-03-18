@@ -1,0 +1,9 @@
+<IfModule authz_core_module>
+    Require all denied
+</IfModule>
+<IfModule !authz_core_module>
+    Deny from all
+</IfModule>
+</IfModule mod_rewrite.c>
+	RewriteEngine On
+	# !IMPORTANT! Set your RewriteBae here and don't forget trailing and leading
