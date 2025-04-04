@@ -10,9 +10,7 @@ class Model extends CI_Model {
 	}
 
 	function getUsers(){
-		$this->db->select('i.*,a.*,a.id id');
-		$this->db->from('accounts a');
-		$this->db->join('information i','a.id = i.account_id');
+		$this->db->from('register');
 		return $this->db->get()->result();
 	}
 

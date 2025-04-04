@@ -25,7 +25,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 */
 // $config['base_url'] = 'http://localhost/SampleSystem/';
 // $config['base_url'] = 'http://www.samplesytem.com/';
-$config['base_url'] = 'http://localhost/peligro';
+$config['base_url'] = 'http://localhost/ci';
 
 /*
 |--------------------------------------------------------------------------

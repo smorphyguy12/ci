@@ -24,6 +24,11 @@ class Users extends MX_Controller
         $this->load->view('index');
     }
 
+    public function manageUsers()
+    {
+        $this->load->view('manage-users');
+    }
+
     public function login()
     {
         $email = $this->input->post('email');
