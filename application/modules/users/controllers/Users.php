@@ -26,8 +26,103 @@ class Users extends MX_Controller
 
     public function manageUsers()
     {
-        $this->load->view('manage-users');
+        $data['row'] = $this->model->getUsers();
+
+        $this->load->view('manage-users', $data);
     }
+
+    public function fetchUser()
+    {
+        $id = $this->input->post('id');
+
+        $data = $this->model->fetchUser($id);
+
+        echo json_encode(["status" => 1, "data" => $data]);
+    }
+
+    public function editUsers()
+    {
+        $id = $this->input->post('id');
+        $fullname = $this->input->post('fullname');
+        $email = $this->input->post('email');
+        $gender = $this->input->post('gender');
+
+        if (!$id || !$fullname || !$email || !$gender) {
+            echo json_encode(['status' => 0, 'message' => 'Missing required fields.']);
+            return;
+        }
+
+        $data = [
+            'fullname' => $fullname,
+            'email' => $email,
+            'gender' => $gender
+        ];
+
+        $stmt = $this->model->updateData('register', $data, ['id' => $id]);
+
+        if ($stmt) {
+            echo json_encode(['status' => 1, 'message' => 'Edit Successfully!']);
+        } else {
+            echo json_encode([
+                'status' => 0,
+                'message' => 'Failed to update user. Error: ' . $this->db->_error_message()
+            ]);
+        }
+    }
+
+    public function deleteUsers()
+    {
+        $id = $this->input->post('id');
+
+        if (!$id) {
+            echo json_encode([
+                'status' => 0,
+                'message' => 'User ID is required.'
+            ]);
+            return;
+        }
+
+        $this->db->where('id', $id); 
+        $stmt = $this->db->delete('register'); 
+
+        if ($stmt) {
+            echo json_encode([
+                'status' => 1,
+                'message' => 'User deleted successfully.'
+            ]);
+        } else {
+            $error = $this->db->error(); 
+            echo json_encode([
+                'status' => 0,
+                'message' => 'Failed to delete user. Error Code: ' . $error['code'] . ' - ' . $error['message']
+            ]);
+        }
+    }
+
+    public function addUser()
+    {
+        $fullname = $this->input->post('fullname');
+        $email = $this->input->post('email');
+        $gender = $this->input->post('gender');
+        $password = $this->input->post('password');
+
+        $data = [
+            'fullname' => $fullname,
+            'email' => $email,
+            'gender' => $gender,
+            'password' => password_hash($password, PASSWORD_DEFAULT),
+            'date_created' => date('Y-m-d H:i:s')
+        ];
+
+        $stmt = $this->model->insertData('register', $data);
+
+        if ($stmt) {
+            echo json_encode(['status' => 1, 'message' => 'User added successfully!']);
+        } else {
+            echo json_encode(['status' => 0, 'message' => 'Failed to add user.']);
+        }
+    }
+
 
     public function login()
     {
@@ -39,7 +134,7 @@ class Users extends MX_Controller
             'password' => $password
         ];
 
-        $stmt = $this->model->getRow('register', "",$data);
+        $stmt = $this->model->getRow('register', "", $data);
         if ($stmt) {
             $this->session->set_flashdata('id', $stmt->id);
             $this->session->set_flashdata('fullname', $stmt->fullname);

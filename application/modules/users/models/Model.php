@@ -9,6 +9,13 @@ class Model extends CI_Model {
 		return $this->db->get()->row();
 	}
 
+	function fetchUser($id) 
+	{
+		$this->db->from('register');
+		$this->db->where('id', $id); 
+		return $this->db->get()->row();
+	}
+
 	function getUsers(){
 		$this->db->from('register');
 		return $this->db->get()->result();
@@ -19,10 +26,11 @@ class Model extends CI_Model {
 		return $this->db->insert_id();
 	}
 
-	function updateData($table,$data,$where){
-		$this->db->where($where);
-		$this->db->update($table,$data);
+	function updateData($table, $data, $where) {
+	    $this->db->where($where);
+	    return $this->db->update($table, $data);
 	}
+
 
 	function deleteData($table,$where){
 		$this->db->delete($table,$where);
